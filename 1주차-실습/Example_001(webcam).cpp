@@ -6,6 +6,7 @@
 #include<opencv2/nonfree/features2d.hpp>
 #include<opencv2/calib3d/calib3d.hpp>
 #include<opencv2/flann/flann.hpp>
+#include<opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <stdio.h>
 #define RED Scalar(0,0,255)
