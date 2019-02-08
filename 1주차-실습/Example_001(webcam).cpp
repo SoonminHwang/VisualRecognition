@@ -17,8 +17,11 @@ int main()
 {
 	//검출 -> 기술 -> 매칭
 	//*****************각자 검출하고싶은 물체의 이미지 파일 위치를 대입
-	Mat cam, img1;
-	img1 = imread("이미지 주소를 넣으세요", IMREAD_GRAYSCALE);
+
+	Mat cam, colorimg1, img1;
+	colorimg1 = imread("이미지 주소를 넣으세요", IMREAD_COLOR);
+	cvtColor(colorimg1, img1, CV_RGB2GRAY);
+	
 	//카메라 준비
 	VideoCapture cap;
 	cap.open(0); //0번째 카메라 open
