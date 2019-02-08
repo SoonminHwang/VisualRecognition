@@ -292,6 +292,7 @@ int main()
 		
 			match = find_matches_percent(Image_feature, Image_array[j]);
 
+			if (match < 10) break;
 			if (match>maxper)
 			{
 				maxper = match;
