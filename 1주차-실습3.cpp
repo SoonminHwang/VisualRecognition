@@ -13,7 +13,7 @@
 using namespace cv;
 using namespace std;
 
-typedef struct Image_feature 
+typedef struct Image_feature
 {
 	Mat descriptors;
 	vector< KeyPoint > keypoint;
@@ -43,7 +43,7 @@ Image_feature find_image_fature(Mat img)
 
 double find_matches_percent(Image_feature img1, Image_feature img2)
 {
-	
+
 	vector < DMatch > good_matches;
 	vector < DMatch > matches;
 
@@ -56,7 +56,7 @@ double find_matches_percent(Image_feature img1, Image_feature img2)
 	//matcher.knnMatch(img1.descriptors, img2.descriptors, matches, 2); // Find two nearest matches
 
 	//좋은 매칭 걸러내기 방법 1 -> Flann
-	
+
 	double dMaxDist = 0;
 	double dMinDist = 100;
 	double dDistance;
@@ -78,7 +78,7 @@ double find_matches_percent(Image_feature img1, Image_feature img2)
 			good_matches.push_back(matches[i]);
 		}
 	}
-	
+
 
 	vector<Point2f> img1_pt;
 	vector<Point2f> img2_pt;
@@ -90,6 +90,7 @@ double find_matches_percent(Image_feature img1, Image_feature img2)
 	}
 
 	Mat mask;
+	if (good_matches.size() == 0)return 0;
 	Mat HomoMatrix = findHomography(img2_pt, img1_pt, RANSAC, 3, mask);
 
 	double outline_cnt = 0;
@@ -115,10 +116,10 @@ double find_matches_percent(Image_feature img1, Image_feature img2)
 
 Mat panorama_stiching(Image_feature img1, Image_feature img2)
 {
-	
+
 	vector < DMatch > good_matches;
 	vector<vector < DMatch >> matches;
-	
+
 	//Flann
 	//FlannBasedMatcher Matcher;
 	//Matcher.match(img1.descriptors, img2.descriptors, matches);
@@ -189,7 +190,7 @@ Mat panorama_stiching(Image_feature img1, Image_feature img2)
 
 	// Transformation matrix
 	Mat Htr = Mat::eye(3, 3, CV_64F);
-	if (min_x < 0) 
+	if (min_x < 0)
 	{
 		max_x = img1.img.size().width - min_x;
 		Htr.at<double>(0, 2) = -min_x;
@@ -198,7 +199,7 @@ Mat panorama_stiching(Image_feature img1, Image_feature img2)
 	{
 		if (max_x < img1.img.size().width) max_x = img1.img.size().width;
 	}
-	
+
 	if (min_y < 0)
 	{
 		max_y = img1.img.size().height - min_y;
@@ -228,7 +229,7 @@ int main()
 	Image_feature Image_feature;
 
 
-	String folderpath = "폴더경로입력";
+	String folderpath = "C:/panaroma";
 	vector<String> filenames;
 	glob(folderpath, filenames);
 
@@ -241,67 +242,74 @@ int main()
 	}
 
 	cout << "\n------- find image Feature (SIFT) ---------\n" << endl;
-	for (int i = 0; i < filenames.size() ; i++)
+	for (int i = 0; i < filenames.size(); i++)
 	{
 		Image_feature = find_image_fature(panorama[i]);
 		Image_array.push_back(Image_feature);
-		cout <<  filenames[i] << " finish "<< endl;
+		cout << filenames[i] << " finish " << endl;
 	}
 
 
 	cout << "\n------- find Center Image ---------\n" << endl;
-
+	
 	vector<int> image_match_count;
 	int match_count = 0;
 	int bef_match_count = 0;
 	int max_match = 0;
-
+	int max_count = 0;
 	for (int i = 0; i < filenames.size(); i++)
 	{
 		for (int j = 0; j < filenames.size(); j++)
 		{
-			if (i != j) 
+			if (i != j)
 			{
-			if ((find_matches_percent(Image_array[i], Image_array[j])) >= 10)	match_count++;
+				if ((find_matches_percent(Image_array[i], Image_array[j])) >= 10)	match_count++;
 			}
 		}
-		if (max_match < match_count) max_match = i;
-
+		if (max_count < match_count) {
+			max_match = i;
+			max_count = match_count;
+		}
 		cout << filenames[i] << " be matching " << match_count << " images" << endl;
 
 		match_count = 0;
 
 	}
-
+	cout << "---" << max_match << endl;
 	cout << "\n------- image Matching ---------\n" << endl;
-
+	Image_array.erase(Image_array.begin() + max_match);
 	Mat Panorama = imread(filenames[max_match], IMREAD_COLOR);
-
-	for (int i = 0; i < filenames.size(); i++) 
+	double match = 0;
+	int maxj = 0;
+	double maxper = 0;
+	for (int i = 0; i < filenames.size()-1; i++)
 	{
+		
 		Image_feature = find_image_fature(Panorama);
 
-		for (int j = 0 ; j < filenames.size(); j++)
+		for (int j = 0; j < Image_array.size(); j++)
 		{
-			int match = 0;
-			
-			if (j== max_match) break;
-
+		
 			match = find_matches_percent(Image_feature, Image_array[j]);
 
-			if (match >= 10)
+			if (match>maxper)
 			{
-				Panorama = panorama_stiching(Image_feature, Image_array[j]);
-				Image_array.erase(Image_array.begin()+j);
-				break;
+				maxper = match;
+				maxj = j;
 			}
 		}
+		cout << "--maxmatchdone--" <<maxj <<endl;
+		Panorama = panorama_stiching(Image_feature, Image_array[maxj]);
+		cout << maxj << endl;
+		Image_array.erase(Image_array.begin() + maxj);
 		cv::namedWindow("test", CV_WINDOW_FREERATIO);
 		cv::imshow("test", Panorama);
 		cv::waitKey(20);
+		maxper = 0;
 	}
 	cv::namedWindow("result", CV_WINDOW_FREERATIO);
 	cv::imshow("result", Panorama);
+	imwrite("result.jpg", Panorama);
 	cv::waitKey(0);
 
 	return 0;
