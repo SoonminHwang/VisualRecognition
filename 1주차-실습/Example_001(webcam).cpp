@@ -80,7 +80,7 @@ int main()
 
 		std::cout << "기술 완료" << std::endl;
 
-		//*****************1.매칭 with sift (SiftDescriptorExtractor)
+		//*****************1.매칭 with FLANN matcher (Fast Library for Approximate Nearest Neighbors)
 		FlannBasedMatcher FLANNmatcher;
 		std::vector<DMatch> match;
 		FLANNmatcher.match(img1outputarray, camoutputarray, match);
