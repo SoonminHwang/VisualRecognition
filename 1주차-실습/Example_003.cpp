@@ -292,13 +292,14 @@ int main()
 		
 			match = find_matches_percent(Image_feature, Image_array[j]);
 
-			if (match < 10) break;
+			
 			if (match>maxper)
 			{
 				maxper = match;
 				maxj = j;
 			}
 		}
+		if (maxper< 10) break;
 		cout << "--maxmatchdone--" <<maxj <<endl;
 		Panorama = panorama_stiching(Image_feature, Image_array[maxj]);
 		cout << maxj << endl;
