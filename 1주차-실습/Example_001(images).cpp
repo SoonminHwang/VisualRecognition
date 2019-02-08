@@ -16,8 +16,8 @@ int main()
 	//*****************각자 검출하고싶은 물체의 이미지 파일 위치를 대입
 	Mat img1, img2;
 	//연산속도를 높이기 위해 IMREAD_GRAYSCALE로 gray이미지로 읽어오고 사이즈를 줄인다.
-	img1 = imread("이미지 주소를 넣으세요", IMREAD_GRAYSCALE);
-	img2 = imread("이미지 주소를 넣으세요", IMREAD_GRAYSCALE);
+	img1 = imread("scene.jpg", IMREAD_GRAYSCALE);
+	img2 = imread("model3.jpg", IMREAD_GRAYSCALE);
 	Size size(img1.cols / 2, img1.rows / 2);
 	resize(img1, img1, size);
 	resize(img2, img2, size);
