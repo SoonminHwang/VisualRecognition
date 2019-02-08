@@ -44,7 +44,6 @@ int main()
 
 	imshow("img1의 키포인트", displayOfImg1);
 	imshow("img2의 키포인트", displayOfImg2);
-	waitKey(0);
 
 	//*****************1.기술 with sift (SiftDescriptorExtractor)
 	SIFT instance_Descriptor;
