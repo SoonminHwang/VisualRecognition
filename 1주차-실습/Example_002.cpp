@@ -21,15 +21,19 @@ int main() {
 	Mat imgArray[NUM];
 
 	//input images
+	printf("input images...\n");
 	for (int i = 0; i < NUM; i++)
 	{
 		imgArray[i] = imread("./images/" + std::to_string(i + 1) + ".jpg");
 	}
 
-	//Panormama stitching func
+	//Panormama stitching func start
+	printf("Panormama stitching func start...\n");
 	result = MakePano(imgArray, NUM);
+	printf("func finished!\n");
 
 	//shows image
+	printf("shows image...\n");
 	imshow("result", result);
 
 	waitKey();
@@ -39,35 +43,42 @@ int main() {
 Mat MakePano(Mat *imgArray, int num)
 {
 	//panorama base
+	printf("panorama base...\n");
 	Mat mainPano = imgArray[0];
 
 	//loop while stitching all images
+	printf("loop while stitching all images...\n");
 	for (int i = 1; i < num; i++)
 	{
 		//convert image to gray : computing faster
+		printf("convert image to gray : computing faster...\n");
 		Mat gray_mainImg, gray_objImg;
 		cvtColor(mainPano, gray_mainImg, COLOR_RGB2GRAY);
 		cvtColor(imgArray[i], gray_objImg, COLOR_RGB2GRAY);
 
-		//SIFT detect algorithm
-		SiftFeatureDetector detector(0.3);
+		//detecting keypoints
+		printf("detecting keypoints...\n");
+		SurfFeatureDetector detector(0.3);
 		vector<KeyPoint> point1, point2;
 		detector.detect(gray_mainImg, point1);
 		detector.detect(gray_objImg, point2);
 
-		//Descriptor
-		SiftDescriptorExtractor extractor;
+		//computing descriptors
+		printf("computing descriptors...\n");
+		SurfDescriptorExtractor extractor;
 		Mat descriptor1, descriptor2;
 		extractor.compute(gray_mainImg, point1, descriptor1);
 		extractor.compute(gray_objImg, point2, descriptor2);
 
 		//match keypoints
+		printf("match keypoints...\n");
 		FlannBasedMatcher matcher;
 		vector<DMatch> matches;
 		matcher.match(descriptor1, descriptor2, matches);
 
 		//get minimal distance
-		double mindistance = 5000;
+		printf("get minimal distance...\n");
+		double mindistance = matches[0].distance;
 		double distance;
 		for (int i = 0; i < descriptor1.rows; i++) {
 			distance = matches[i].distance;
@@ -75,6 +86,7 @@ Mat MakePano(Mat *imgArray, int num)
 		}
 
 		//filtering matches using minimal distance
+		printf("filtering matches using minimal distance...\n");
 		vector<DMatch>goodmatch;
 		for (int i = 0; i < descriptor1.rows; i++) {
 			if (matches[i].distance < 5 * mindistance)
@@ -82,10 +94,12 @@ Mat MakePano(Mat *imgArray, int num)
 		}
 
 		//drawing lines between matched keypoints
+		printf("drawing lines between matched keypoints...\n");
 		Mat matGoodMatcges;
 		drawMatches(mainPano, point1, imgArray[i], point2, goodmatch, matGoodMatcges, Scalar::all(-1), Scalar(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
 		//(option)shows the image
+		printf("(option)shows the image...\n");
 		imshow("after drawing matches " + std::to_string(i), matGoodMatcges);
 
 
@@ -97,6 +111,7 @@ Mat MakePano(Mat *imgArray, int num)
 		}
 
 		//Find Homography
+		printf("Find Homography...\n");
 		Mat homomatrix = findHomography(scene, obj, CV_RANSAC);
 
 		//////////////////////////////////////////////////////
@@ -104,36 +119,34 @@ Mat MakePano(Mat *imgArray, int num)
 		//////////////////////////////////////////////////////
 
 		//warp images
+		printf("warp images...\n");
 		Mat warp;
 		warpPerspective(imgArray[i], warp, homomatrix, Size(imgArray[i].cols + mainPano.cols, imgArray[i].rows), INTER_CUBIC);
 
 		//copy warped image
+		printf("copy warped image...\n");
 		Mat matPanorama;
 		matPanorama = warp.clone();
 
 		//paste
+		printf("paste...\n");
 		Mat matROI(matPanorama, Rect(0, 0, mainPano.cols, mainPano.rows));
 		mainPano.copyTo(matROI);
+		
 
-		//
-		vector<Point> nonBlackList;
-		nonBlackList.reserve(warp.rows *warp.cols);
-
+		//eliminating black pixels by tracing column
+		printf("eliminating black pixels by tracing column...\n");
 		int max = 0;
 		for (int i = 0; i < matPanorama.cols; ++i)
 		{
 			//   if not black: add to the list
-			if (matPanorama.at<Vec3b>(matPanorama.rows / 2, i) != Vec3b(0, 0, 0))
+			if (matPanorama.at<Vec3b>(matPanorama.rows * (3 / 4), i) != Vec3b(0, 0, 0))
 			{
 				if (max < i)max = i;
 			}
-
-			Mat img = matPanorama(Range(0, matPanorama.rows), Range(0, max));
-			mainPano = img;
+			mainPano = matPanorama(Range(0, matPanorama.rows), Range(0, max));
 		}
 		imshow("after stitching " + std::to_string(i), mainPano);
-
 	}
-
 	return mainPano;
 }
