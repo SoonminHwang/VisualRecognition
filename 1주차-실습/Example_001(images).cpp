@@ -51,7 +51,7 @@ int main()
 	instance_Descriptor.compute(img1, img1keypoint, img1outputarray);
 	instance_Descriptor.compute(img2, img2keypoint, img2outputarray);
 
-	//*****************1.매칭 with sift (SiftDescriptorExtractor)
+	//*****************1.매칭 with FLANN matcher (Fast Library for Approximate Nearest Neighbors)
 	FlannBasedMatcher FLANNmatcher;
 	std::vector<DMatch> match;
 	FLANNmatcher.match(img1outputarray, img2outputarray, match);
