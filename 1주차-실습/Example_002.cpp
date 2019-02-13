@@ -58,14 +58,14 @@ Mat MakePano(Mat *imgArray, int num)
 
 		//detecting keypoints
 		printf("detecting keypoints...\n");
-		SurfFeatureDetector detector(0.3);
+		SiftFeatureDetector detector(0, 3, 0.3);
 		vector<KeyPoint> point1, point2;
 		detector.detect(gray_mainImg, point1);
 		detector.detect(gray_objImg, point2);
 
 		//computing descriptors
 		printf("computing descriptors...\n");
-		SurfDescriptorExtractor extractor;
+		SiftDescriptorExtractor extractor;
 		Mat descriptor1, descriptor2;
 		extractor.compute(gray_mainImg, point1, descriptor1);
 		extractor.compute(gray_objImg, point2, descriptor2);
