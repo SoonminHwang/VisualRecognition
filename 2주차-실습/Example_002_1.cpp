@@ -56,7 +56,7 @@ int main()
 		cout << num << " image load" << endl;
 		for (int i = NUMBER_train; i < NUMBER_test+ NUMBER_train; i++)
 		{
-			Mat MNIST = imread("./data2/MNIST" + std::to_string(num) + "_" + std::to_string(i + 1) + ".PNG", COLOR_RGB2GRAY);
+			Mat MNIST = imread("./data2/MNIST/data " + std::to_string(num) + "_" + std::to_string(i + 1) + ".PNG", COLOR_RGB2GRAY);
 			if (!(MNIST.data))
 			{
 				cout << "image load fail" << endl;
