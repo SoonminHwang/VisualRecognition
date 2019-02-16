@@ -159,14 +159,6 @@ int main()
 	accuracy_test = (count_test / Response_test.rows) * 100;
 	cout << "accuracy_test : " << accuracy_test << endl;
 
-
-	cout << "\n//////////////////////////////////////////////////////" << endl;
-	cout << "                      svm save                   " << endl;
-	cout << "//////////////////////////////////////////////////////\n" << endl;
-	/// Save svm file
-	svm.save("MNIST_CNN_SVM.xml");
-
-
 }
 
 vector<float> find_HOG_feature_image(Mat img)
