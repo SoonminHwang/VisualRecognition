@@ -61,7 +61,7 @@ int main()
 		//-- 3. Apply the classifier to the frame
 		detectAndDisplay(frame);
 
-		if (!waitKey(10))
+		if (!waitKey(10)<0)
 		{
 			break; // escape
 		}
