@@ -12,10 +12,10 @@ vector<vector<float>> CsvtoVector(String filename);
 
 int main()
 {
-	vector<vector<float>> CNN_train_data_label = CsvtoVector("./image_train_label_rs.csv");
-	vector<vector<float>> CNN_train_data = CsvtoVector("./image_train_rs.csv");
-	vector<vector<float>> CNN_test_data_label = CsvtoVector("./image_test_label_rs.csv");
-	vector<vector<float>> CNN_test_data = CsvtoVector("./image_test_rs.csv");
+	vector<vector<float>> CNN_train_data_label = CsvtoVector("./data1/image_train_label_rs.csv");
+	vector<vector<float>> CNN_train_data = CsvtoVector("./data1/image_train_rs.csv");
+	vector<vector<float>> CNN_test_data_label = CsvtoVector("./data1/image_test_label_rs.csv");
+	vector<vector<float>> CNN_test_data = CsvtoVector("./data1/image_test_rs.csv");
 
 	int descriptor_size = CNN_train_data[0].size();
 
