@@ -89,7 +89,7 @@ int main()
 		}
 	}
 
-	svm.predict(MNIST_CNN_test_data_Mat, Response_train);
+	svm.predict(MNIST_CNN_train_data_Mat, Response_train);
 	float count_train = 0, accuracy_train = 0;
 
 	for (int i = 0; i < Response_train.rows; i++)
