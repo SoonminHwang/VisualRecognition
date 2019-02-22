@@ -11,7 +11,7 @@
 |:----:|:----:|:----:|:----:|:----:|:----:|
 |  1 | 컴퓨터비전기반 물체 인식 |  [이론](https://www.dropbox.com/s/nixwm5t9s11vwej/CVOR.pdf?dl=0)    | [실습1](1주차-실습1.md), [실습2](1주차-실습2.md), [실습3](1주차-실습3.md) | 개발환경[(Win](1주차-개발환경구축.pdf) / [Mac)](https://github.com/moduPlayGround/ComputerVision-for-VisualRecognition/blob/master/%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%20MacOS.md)| RCV@Sejong 연구원  |
 |  2 | 기계학습기반 물체 인식 |   [이론](https://www.dropbox.com/s/u3w8uqe9hgl2t54/2%EC%A3%BC%EC%B0%A8_%EC%9D%B4%EB%A1%A01.pdf?dl=0)    |  [실습1](2주차-실습1.md), [실습2](2주차-실습2.md)     |  1주차와 동일 |  RCV@Sejong 연구원  |
-|  3 | 딥러닝기반 물체 인식-2D |  ...     |  ...     |   | RCV@KAIST 연구원  |
+|  3 | 딥러닝기반 물체 인식-2D |  [이론](https://drive.google.com/file/d/1mwR8tnXPMw2lUEbO_TchXdsaobUOsWyw/view?usp=sharing)     |  [실습안내](3주차-실습.md)     | Firefox/Chrome/Safari browser  | RCV@KAIST 연구원  |
 |  4 | 딥러닝기반 물체 인식-3D |   ...    |  ...     |   | RCV@KAIST 연구원  |
 
 
